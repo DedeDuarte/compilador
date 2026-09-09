@@ -3,15 +3,33 @@
 
 typedef enum {
     ERRO,
-    ALGORITMO, CARACTERE, DIV, E, ENQUANTO, ENTAO, ESCREVA, FACA,
-    FALSO, FIM, FUNCAO, INICIO, INTEIRO, LEIA, LOGICO, MOD, OU,
-    PROCEDIMENTO, SE, SENAO, VAR, VERDADEIRO,
-    IDENTIFICADOR, CONSTINT, CONSTCHAR,
-    ATRIBUICAO, SOMA, SUBTRACAO, MULTIPLICACAO,
-    MENOR, MENOR_IGUAL, MAIOR, MAIOR_IGUAL, DIFERENTE, IGUAL,
-    PONTO_VIRGULA, VIRGULA, PONTO, DOIS_PONTOS,
-    ABRE_PARENTESE, FECHA_PARENTESE,
+
+    // Palavras reservadas
+    ALGORITMO,      CARACTERE,      DIV,
+    E,              ENQUANTO,       ENTAO,
+    ESCREVA,        FACA,           FALSO,
+    FIM,            FUNCAO,         INICIO,
+    INTEIRO,        LEIA,           LOGICO,
+    MOD,            OU,             PROCEDIMENTO,
+    SE,             SENAO,          VAR,
+    VERDADEIRO,
+
+    // Identificadores e constantes
+    IDENTIFICADOR,  CONSTINT,       CONSTCHAR,
+
+    // Operadores
+    ATRIBUICAO,     SOMA,           SUBTRACAO,
+    MULTIPLICACAO,  MENOR,          MENOR_IGUAL,
+    MAIOR,          MAIOR_IGUAL,    DIFERENTE,
+    IGUAL,
+
+    // Delimitadores
+    PONTO_VIRGULA,  VIRGULA,        PONTO,
+    DOIS_PONTOS,    ABRE_PARENTESE, FECHA_PARENTESE,
+
+    // Controle
     COMENTARIO, EOS
+
 } TAtomo;
 
 typedef struct {
