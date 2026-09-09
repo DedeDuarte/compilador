@@ -1,13 +1,40 @@
-123
-321
-123 123
-123a
-123_
-123a123
+{- Teste do analisador lexico: tokens simples, compostos e palavras reservadas -}
 
-algoritmo teste;
+ALGORITMO Teste_Lexico;
 
-inicio
-escreva(a + b);
-leia(a, b);
-fim.
+VAR
+    numero, outro_numero: INTEIRO;
+    letra: CARACTERE;
+    ativo: LOGICO;
+
+INICIO
+    numero := 123;
+    outro_numero := 12E2;
+    letra := 'a';
+    ativo := VERDADEIRO;
+
+    leia(numero, outro_numero);
+    escreva(numero, outro_numero, letra);
+
+    SE numero <> outro_numero ENTAO
+        numero := numero + 1
+    SENAO
+        numero := numero - 1;
+
+    ENQUANTO numero <= 100 faca
+        numero := numero * 2;
+
+    {- Operadores: + - * div mod e ou nao -}
+    numero := (numero div 2) mod 3;
+    ativo := VERDADEIRO ou FALSO e nao FALSO;
+
+    {- Operadores relacionais: < <= > >= = <> -}
+    SE numero < outro_numero ENTAO
+        escreva('m')
+    SENAO
+        escreva('n');
+
+FIM.
+
+{- Palavras reservadas que tambem devem ser reconhecidas:
+   procedimento funcao -}
