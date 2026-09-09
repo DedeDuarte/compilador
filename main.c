@@ -1,14 +1,17 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "include/atomos.h"
 #include "include/utils.h"
 
-void is_constint(char c, FILE* file, TInfoAtomo* atomo) {
+#define STR_MAX_SIZE 16
+
+void eh_constint(char c, FILE* file, TInfoAtomo* atomo) {
     int value = 0;
 
-    while (c >= '0' && c <= '9') {
+    while (isdigit(c)) {
         value = value * 10 + (c - '0'); // pega o valor real do número
         c = fgetc(file);
     }
@@ -24,11 +27,58 @@ void is_constint(char c, FILE* file, TInfoAtomo* atomo) {
     atomo->atributo.numero = value;
 }
 
-void is_letter(char c, FILE* file, TInfoAtomo* atomo) {
-    char STR_SIZE = 16;
-    char str[STR_SIZE];
+void identifica_atomo_str(char* str, TInfoAtomo* atomo) {
+    const char* palavras[] = {
+        "e", "ou", "se", "div", "fim", "mod", "var", "faca",
+        "leia", "entao", "falso", "senao", "funcao", "inicio",
+        "logico", "escreva", "inteiro", "enquanto", "algoritmo",
+        "caractere", "verdadeiro", "procedimento"
+    };
 
-    do
+    TAtomo atomos[] = {
+        E, OU, SE, DIV, FIM, MOD, VAR, FACA,
+        LEIA, ENTAO, FALSO, SENAO, FUNCAO, INICIO,
+        LOGICO, ESCREVA, INTEIRO, ENQUANTO, ALGORITMO,
+        CARACTERE, VERDADEIRO, PROCEDIMENTO
+    };
+
+    int quantidade = sizeof(palavras) / sizeof(palavras[0]);
+
+    for (int i = 0; i < quantidade; i++) {
+        if (strcmp(str, palavras[i]) == 0) {
+            atomo->atomo = atomos[i];
+            return;
+        }
+    }
+
+    atomo->atomo = IDENTIFICADOR;
+    strcpy(atomo->atributo.id, str);
+}
+
+void eh_alpha(char c, FILE* file, TInfoAtomo* atomo) {
+    char str[STR_MAX_SIZE];
+
+    char excedeu = 0;
+
+    int i = 0;
+    while (isalpha(c) || isdigit(c) || c == '_') {
+        if (i < STR_MAX_SIZE-1)
+            str[i++] = tolower(c);
+        else
+            excedeu = 1;
+
+        c = fgetc(file);
+    }
+    
+    str[i] = '\0';
+    
+    if (c != EOF)
+        ungetc(c, file);
+
+    if (excedeu)
+        return;
+    
+    identifica_atomo_str(str, atomo);
 }
 
 void obter_atomo(FILE* file) {
@@ -47,17 +97,18 @@ void obter_atomo(FILE* file) {
         atomo->atomo = ERRO;
 
         switch (c) {
-        case '0' ... '9':
-            is_constint(c, file, atomo);
-            break;
-        
-        case 'a' ... 'z':
-        case 'A' ... 'Z':
-            is_letter(c, file, atomo);
-            break;
+            case '0' ... '9':
+                eh_constint(c, file, atomo);
+                break;
+            
+            case 'a' ... 'z':
+            case 'A' ... 'Z':
+            case '_':
+                eh_alpha(c, file, atomo);
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
 
         print_atomo(atomo);
