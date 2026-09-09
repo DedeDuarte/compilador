@@ -51,17 +51,17 @@ void print_atomo(TInfoAtomo* atomo) {
         case EOS:               nome = "eos"; break;
     }
 
-    printf("# %d:%s", atomo->linha, nome);
+    printf("#%d: %s", atomo->linha, nome);
 
     switch (atomo->atomo) {
         case IDENTIFICADOR:
-            printf(": %s", atomo->atributo.id);
+            printf(" -> %s", atomo->atributo.id);
             break;
         case CONSTINT:
-            printf(": %d", atomo->atributo.numero);
+            printf(" -> %d", atomo->atributo.numero);
             break;
         case CONSTCHAR:
-            printf(": '%c'", atomo->atributo.ch);
+            printf(" -> '%c'", atomo->atributo.ch);
             break;
         default:
             break;
