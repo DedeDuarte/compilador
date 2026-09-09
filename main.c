@@ -97,6 +97,25 @@ void obter_atomo(FILE* file) {
         atomo->atomo = ERRO;
 
         switch (c) {
+            case '+':
+                atomo->atomo = SOMA; break;
+            case '-':
+                atomo->atomo = SUBTRACAO; break;
+            case '*':
+                atomo->atomo = MULTIPLICACAO; break;
+            case '=':
+                atomo->atomo = IGUAL; break;
+            case '(':
+                atomo->atomo = ABRE_PARENTESE; break;
+            case ')':
+                atomo->atomo = FECHA_PARENTESE; break;
+            case ';':
+                atomo->atomo = PONTO_VIRGULA; break;
+            case ',':
+                atomo->atomo = VIRGULA; break;
+            case '.':
+                atomo->atomo = PONTO; break;
+
             case '0' ... '9':
                 eh_constint(c, file, atomo);
                 break;
