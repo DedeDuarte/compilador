@@ -42,4 +42,6 @@ typedef struct {
     } atributo;
 } TInfoAtomo;
 
+void identifica_atomo_str(char* str, TInfoAtomo* atomo);
+
 #endif
