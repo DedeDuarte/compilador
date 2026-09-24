@@ -1,19 +1,27 @@
+/*
+ * |==== Grupo (solo) ====|==========|
+ * |         Nome         |    RA    |
+ * |----------------------|----------|
+ * | Andre Doerner Duarte | 10427938 |
+ * |======================|==========|
+ */
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "sintatico.h"
 #include "atomos.h"
 #include "utils.h"
 #include "verificadores.h"
-#include "lexico.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         fprintf(stderr,
             "ERRO\n"
-            "Uso correto: ./%s <arquivo.fonte>\n",
-            argv[1]
+            "Uso correto: %s <arquivo.fonte>\n",
+            argv[0]
         );
         exit(1);
     }
@@ -27,7 +35,9 @@ int main(int argc, char* argv[]) {
         exit(2);
     }
 
-    obter_atomo(file);
+    analizar(file);
+
+    fclose(file);
 
     return 0;
 }

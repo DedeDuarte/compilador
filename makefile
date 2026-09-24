@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Wno-unused-result -Iinclude -g -Og
 
 SRC = main.c src/*.c
-TARGET = a.out
+TARGET = compilador
 
 main:
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)

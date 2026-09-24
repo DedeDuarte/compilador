@@ -1,8 +1,7 @@
-# Compilador Portugol
-
+# Compilador
 ## Como compilar e rodar
 
-Na pasta do projeto, execute:
+Rode os seguintes comandos na pasta principal do projeto:
 
 ```sh
 make
@@ -29,18 +28,22 @@ Para apagar o executável, use `make clean`.
 
 ```text
 .
-├── main.c                 entrada do programa e abertura do arquivo
+├── main.c                 entrada do programa, abertura do arquivo e início da análise
 ├── makefile               comando de compilação
 ├── README.md              instruções e estrutura do projeto
 ├── include/
-│   ├── atomos.h           tipos dos átomos
+│   ├── atomos.h           tipos e informações dos átomos
+│   ├── identificadores.h  declarações das regras da gramática
 │   ├── lexico.h           declaração do analisador léxico
-│   ├── utils.h            declaração da impressão dos átomos
-│   └── verificadores.h    declarações dos verificadores
+│   ├── sintatico.h        declarações do analisador sintático
+│   ├── utils.h            declarações das funções de exibição dos átomos
+│   └── verificadores.h    declarações dos verificadores léxicos
 ├── src/
-│   ├── atomos.c           arquivo dos átomos
+│   ├── atomos.c           identificação de palavras reservadas
+│   ├── identificadores.c  reconhecimento das regras da gramática
 │   ├── lexico.c           leitura dos átomos
-│   ├── utils.c            impressão dos átomos
+│   ├── sintatico.c        controle da análise sintática e tratamento de erros
+│   ├── utils.c            exibição dos átomos
 │   └── verificadores.c    reconhecimento de lexemas
 ├── data/
 │   ├── file.man           exemplo de entrada

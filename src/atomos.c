@@ -1,3 +1,11 @@
+/*
+ * |==== Grupo (solo) ====|==========|
+ * |         Nome         |    RA    |
+ * |----------------------|----------|
+ * | Andre Doerner Duarte | 10427938 |
+ * |======================|==========|
+ */
+
 #include "string.h"
 
 #include "atomos.h"
@@ -5,14 +13,14 @@
 void identifica_atomo_str(char* str, TInfoAtomo* atomo) {
     const char* palavras[] = {
         "e", "ou", "se", "div", "fim", "mod", "var", "faca",
-        "leia", "entao", "falso", "senao", "funcao", "inicio",
+        "leia", "nao", "entao", "falso", "senao", "funcao", "inicio",
         "logico", "escreva", "inteiro", "enquanto", "algoritmo",
         "caractere", "verdadeiro", "procedimento"
     };
 
     TAtomo atomos[] = {
         E, OU, SE, DIV, FIM, MOD, VAR, FACA,
-        LEIA, ENTAO, FALSO, SENAO, FUNCAO, INICIO,
+        LEIA, NAO, ENTAO, FALSO, SENAO, FUNCAO, INICIO,
         LOGICO, ESCREVA, INTEIRO, ENQUANTO, ALGORITMO,
         CARACTERE, VERDADEIRO, PROCEDIMENTO
     };

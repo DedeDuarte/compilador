@@ -1,3 +1,11 @@
+/*
+ * |==== Grupo (solo) ====|==========|
+ * |         Nome         |    RA    |
+ * |----------------------|----------|
+ * | Andre Doerner Duarte | 10427938 |
+ * |======================|==========|
+ */
+
 #ifndef ATOMOS_H
 #define ATOMOS_H
 
@@ -10,7 +18,7 @@ typedef enum {
     ESCREVA,        FACA,           FALSO,
     FIM,            FUNCAO,         INICIO,
     INTEIRO,        LEIA,           LOGICO,
-    MOD,            OU,             PROCEDIMENTO,
+    MOD,            NAO,            OU,             PROCEDIMENTO,
     SE,             SENAO,          VAR,
     VERDADEIRO,
 
