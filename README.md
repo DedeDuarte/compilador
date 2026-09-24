@@ -46,5 +46,5 @@ Para apagar o executável, use `make clean`.
 │   ├── file.man           exemplo de entrada
 │   └── file2.man          outro exemplo de entrada
 └── docs/
-    └── proj.pdf          enunciado do projeto
+    └── proj.pdf           enunciado do projeto
 ```
