@@ -1,7 +1,11 @@
-Compilador Portugol
+Github do projeto: https://github.com/DedeDuarte/compilador
 
 Grupo (solo):
     Andre Doerner Duarte - 10427938
+
+---
+
+Compilador Portugol
 
 Como compilar e executar:
     make
