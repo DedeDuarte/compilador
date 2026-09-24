@@ -51,7 +51,10 @@ void print_atomo(TInfoAtomo* atomo) {
         case EOS:               nome = "eos"; break;
     }
 
-    printf("#%d: %s", atomo->linha, nome);
+    if (atomo->atomo == ERRO)
+        printf("#%d: " "\033[38;2;255;0;0m" "%s" "\033[0m", atomo->linha, nome);
+    else
+        printf("#%d: %s", atomo->linha, nome);
 
     switch (atomo->atomo) {
         case IDENTIFICADOR:
