@@ -1,5 +1,5 @@
 #include <ctype.h>
-// #include <stdlib.h>
+#include <limits.h>
 #include <string.h>
 
 #include "../include/verificadores.h"
@@ -10,10 +10,49 @@
 
 void eh_constint(int c, FILE* file, TInfoAtomo* atomo) {
     int value = 0;
+    int excedeu = 0;
 
     while (isdigit(c)) {
-        value = value * 10 + (c - '0'); // pega o valor real do número
+        // Verifica se o número ainda cabe em int
+        if (value > (INT_MAX - (c - '0')) / 10)
+            excedeu = 1;
+        else if (!excedeu)
+            value = value * 10 + (c - '0'); // pega o valor real do número
         c = fgetc(file);
+    }
+
+    if (excedeu)
+        return;
+
+    // Caso o número esteja em notação exponencial, como 12E+2
+    if (c == 'E') {
+        int expoente = 0;
+        c = fgetc(file);
+
+        if (c == '+')
+            c = fgetc(file);
+
+        // Depois do E ou E+, precisa ter pelo menos um dígito
+        if (!isdigit(c))
+            return;
+
+        while (isdigit(c)) {
+            // Evita estouro ao ler um expoente muito grande
+            if (expoente < 10) {
+                expoente = expoente * 10 + (c - '0');
+                if (expoente > 10)
+                    expoente = 10;
+            }
+            c = fgetc(file);
+        }
+
+        // Multiplica por 10 para cada unidade do expoente
+        while (expoente-- > 0) {
+            if (value > INT_MAX / 10)
+                return;
+
+            value *= 10;
+        }
     }
 
     if (isalpha(c) || c == '_')
@@ -88,10 +127,10 @@ void eh_comparacao(int c, FILE* file, TInfoAtomo* atomo) {
     else {
         c = fgetc(file);
 
-        if (c == '=') // Caso ">="
+        if (c == '=')   // Caso ">="
             atomo->atomo = MAIOR_IGUAL;
 
-        else { // Caso ">"
+        else {          // Caso ">"
             atomo->atomo = MAIOR;
 
             if (c != EOF)
