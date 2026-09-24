@@ -54,12 +54,46 @@ void eh_alpha(int c, FILE* file, TInfoAtomo* atomo) {
 void eh_atribuicao(FILE* file, TInfoAtomo* atomo) {
     int c = fgetc(file);
 
-    if (c == '=') {
+    if (c == '=')
         atomo->atomo = ATRIBUICAO;
-    }
+
     else {
         atomo->atomo = DOIS_PONTOS;
+
         if (c != EOF)
             ungetc(c, file);
+    }
+}
+
+void eh_comparacao(int c, FILE* file, TInfoAtomo* atomo) {
+    if (c == '<') {
+        c = fgetc(file);
+
+        if (c == '=') // Caso: "<="
+            atomo->atomo = MENOR_IGUAL;
+
+        else if (c == '>') // Caso: "<>"
+            atomo->atomo = DIFERENTE;
+
+        else { // Caso: "<"
+            atomo->atomo = MENOR;
+
+            if (c != EOF)
+                ungetc(c, file);
+        }
+    }
+
+    else {
+        c = fgetc(file);
+
+        if (c == '=') // Caso: ">="
+            atomo->atomo = MAIOR_IGUAL;
+
+        else { // Caso: ">"
+            atomo->atomo = MAIOR;
+
+            if (c != EOF)
+                ungetc(c, file);
+        }
     }
 }

@@ -10,5 +10,6 @@
 void eh_constint(int c, FILE* file, TInfoAtomo* atomo);
 void eh_alpha(int c, FILE* file, TInfoAtomo* atomo);
 void eh_atribuicao(FILE* file, TInfoAtomo* atomo);
+void eh_comparacao(int c, FILE* file, TInfoAtomo* atomo);
 
 #endif
