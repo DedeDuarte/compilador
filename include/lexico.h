@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
-void obter_atomo(FILE* file);
+#include "atomos.h"
+
+TInfoAtomo obter_atomo(FILE* file);
 
 #endif

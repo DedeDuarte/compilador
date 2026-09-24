@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "sintatico.h"
 #include "atomos.h"
 #include "utils.h"
 #include "verificadores.h"
-#include "lexico.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
         exit(2);
     }
 
-    obter_atomo(file);
+    analizar(file);
 
     return 0;
 }
