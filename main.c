@@ -55,6 +55,11 @@ void obter_atomo(FILE* file) {
 
             case '{':
                 linhas_puladas = eh_comentario(file, atomo);
+                break;
+
+            case '\'':
+                linhas_puladas = eh_constchar(file, atomo);
+                break;
 
             default:
                 break;

@@ -133,3 +133,24 @@ int eh_comentario(FILE* file, TInfoAtomo* atomo) {
 
     return linhas_puladas;
 }
+
+int eh_constchar(FILE* file, TInfoAtomo* atomo) {
+    int c = fgetc(file);
+    if (c == EOF)
+        return 0;
+
+    atomo->atributo.ch = c;
+
+    int linhas_puladas = (c == '\n');
+
+    c = fgetc(file);
+    if (c != '\'') {
+        if (c != EOF)
+            ungetc(c, file);
+
+        return linhas_puladas;
+    }
+
+    atomo->atomo = CONSTCHAR;
+    return linhas_puladas;
+}
