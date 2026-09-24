@@ -1,10 +1,11 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude
 
-EXIT = a.out
+SRC = main.c src/*.c
+TARGET = a.out
 
 main:
-	$(CC) $(CFLAGS) main.c src/*.c -o $(EXIT)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 
 clean:
-	rm -f $(EXIT)
+	rm -f $(TARGET)
