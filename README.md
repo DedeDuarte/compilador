@@ -15,7 +15,15 @@ O `make` executa o comando GCC abaixo (com todos os arquivos `.c` que estão em 
 gcc -Wall -Wextra -Iinclude main.c src/*.c -o a.out
 ```
 
-`-Wall -Wextra` ativam avisos do compilador, `-Iinclude` indica onde estão os arquivos `.h`, `src/*.c` inclui os arquivos `.c` dessa pasta e `-o a.out` define o nome do executável. Para usar outro arquivo de entrada, substitua `data/file.man` pelo caminho desejado. Para apagar o executável, use `make clean`.
+| Flag | Função |
+| ---- | ------ |
+| `-Wall -Wextra` | Ativam avisos do compilador |
+| `-Iinclude` | Indica onde estão os arquivos `.h`
+| `src/*.c` | Inclui os arquivos `.c` dessa pasta
+| `-o a.out` | Define o nome do executável
+
+Para usar outro arquivo de entrada, substitua `data/file.man` pelo caminho desejado.   
+Para apagar o executável, use `make clean`.
 
 ## Estrutura
 
