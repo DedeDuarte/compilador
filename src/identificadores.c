@@ -1,7 +1,6 @@
 #include "identificadores.h"
+#include "sintatico.h"
 
-// <fator> ::= identificador [ '(' <lista_expressao> ')' ] | constint | constchar |
-//             '(' <expressao> ')' | ( '+' | '-' | nao ) <fator> | verdadeiro | falso
 void identificar_fator(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
         case IDENTIFICADOR:
@@ -34,7 +33,6 @@ void identificar_fator(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <operador_multiplicacao> ::= '*' | div | e
 void identificar_operador_multiplicacao(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
         case MULTIPLICACAO:
@@ -47,7 +45,6 @@ void identificar_operador_multiplicacao(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <termo> ::= <fator> { <operador_multiplicacao> <fator> }
 void identificar_termo(TInfoAtomo* lookahead, FILE* file) {
     identificar_fator(lookahead, file);
 
@@ -58,7 +55,6 @@ void identificar_termo(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <operador_adicao> ::= '+' | '-' | mod | ou
 void identificar_operador_adicao(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
         case SOMA:
@@ -72,7 +68,6 @@ void identificar_operador_adicao(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <expressao_simples> ::= <termo> { <operador_adicao> <termo> }
 void identificar_expressao_simples(TInfoAtomo* lookahead, FILE* file) {
     identificar_termo(lookahead, file);
 
@@ -83,7 +78,6 @@ void identificar_expressao_simples(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <operador_relacional> ::= '<>' | '<' | '<=' | '>=' | '>' | '='
 void identificar_operador_relacional(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
         case DIFERENTE:
@@ -99,7 +93,6 @@ void identificar_operador_relacional(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <expressao> ::= <expressao_simples> [ <operador_relacional> <expressao_simples> ]
 void identificar_expressao(TInfoAtomo* lookahead, FILE* file) {
     identificar_expressao_simples(lookahead, file);
 
@@ -111,7 +104,6 @@ void identificar_expressao(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <lista_expressao> ::= <expressao> { ',' <expressao> }
 void identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file) {
     identificar_expressao(lookahead, file);
 
@@ -121,8 +113,6 @@ void identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <chamada_procedimento> ::= identificador [ '(' <lista_expressao> ')' ]
-// O identificador ja foi consumido em identificar_comando().
 void identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == ABRE_PARENTESE) {
         consome(lookahead, ABRE_PARENTESE, file);
@@ -131,7 +121,6 @@ void identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <comando_repeticao> ::= enquanto <expressao> faca <comando>
 void identificar_comando_repeticao(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ENQUANTO, file);
     identificar_expressao(lookahead, file);
@@ -139,7 +128,6 @@ void identificar_comando_repeticao(TInfoAtomo* lookahead, FILE* file) {
     identificar_comando(lookahead, file);
 }
 
-// <comando_condicional> ::= se <expressao> entao <comando> [ senao <comando> ]
 void identificar_comando_condicional(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, SE, file);
     identificar_expressao(lookahead, file);
@@ -152,7 +140,6 @@ void identificar_comando_condicional(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <comando_saida> ::= escreva '(' <lista_expressao> ')'
 void identificar_comando_saida(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ESCREVA, file);
     consome(lookahead, ABRE_PARENTESE, file);
@@ -160,7 +147,6 @@ void identificar_comando_saida(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FECHA_PARENTESE, file);
 }
 
-// <comando_entrada> ::= leia '(' identificador { ',' identificador } ')'
 void identificar_comando_entrada(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, LEIA, file);
     consome(lookahead, ABRE_PARENTESE, file);
@@ -174,20 +160,15 @@ void identificar_comando_entrada(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FECHA_PARENTESE, file);
 }
 
-// <comando_atribuicao> ::= identificador ':=' <expressao>
-// O identificador ja foi consumido em identificar_comando().
 void identificar_comando_atribuicao(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ATRIBUICAO, file);
     identificar_expressao(lookahead, file);
 }
 
-// <comando> ::= <comando_atribuicao> | <comando_entrada> | <comando_saida> |
-//               <comando_condicional> | <comando_repeticao> |
-//               <chamada_procedimento> | <comando_composto>
 void identificar_comando(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
         case IDENTIFICADOR:
-            // Atribuicao e chamada de procedimento comecam com identificador.
+        
             consome(lookahead, IDENTIFICADOR, file);
             if (lookahead->atomo == ATRIBUICAO)
                 identificar_comando_atribuicao(lookahead, file);
@@ -214,7 +195,6 @@ void identificar_comando(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <comando_composto> ::= inicio <comando> { ';' <comando> } fim
 void identificar_comando_composto(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, INICIO, file);
     identificar_comando(lookahead, file);
@@ -227,7 +207,6 @@ void identificar_comando_composto(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FIM, file);
 }
 
-// <parametro_formal> ::= [ var ] <lista_variaveis>
 void identificar_parametro_formal(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == VAR)
         consome(lookahead, VAR, file);
@@ -235,8 +214,6 @@ void identificar_parametro_formal(TInfoAtomo* lookahead, FILE* file) {
     identificar_lista_variaveis(lookahead, file);
 }
 
-// <parametros_formais> ::= '(' <parametro_formal> { ';' <parametro_formal> } ')' |
-//                          '(' ')'
 void identificar_parametros_formais(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ABRE_PARENTESE, file);
 
@@ -252,7 +229,6 @@ void identificar_parametros_formais(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FECHA_PARENTESE, file);
 }
 
-// <tipo> ::= caractere | inteiro | logico
 void identificar_tipo(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
         case CARACTERE:
@@ -269,8 +245,6 @@ void identificar_tipo(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <declaracao_de_procedimento> ::= procedimento identificador <parametros_formais>
-//                                 <declaracao_variaveis> <comando_composto>
 void identificar_declaracao_procedimento(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, PROCEDIMENTO, file);
     consome(lookahead, IDENTIFICADOR, file);
@@ -279,8 +253,6 @@ void identificar_declaracao_procedimento(TInfoAtomo* lookahead, FILE* file) {
     identificar_comando_composto(lookahead, file);
 }
 
-// <declaracao_de_funcao> ::= funcao <tipo> identificador <parametros_formais>
-//                           <declaracao_variaveis> <comando_composto>
 void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FUNCAO, file);
     identificar_tipo(lookahead, file);
@@ -290,7 +262,6 @@ void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file) {
     identificar_comando_composto(lookahead, file);
 }
 
-// <declaracao_de_rotinas> ::= { <declaracao_de_funcao> | <declaracao_de_procedimento> }
 void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file) {
     while (lookahead->atomo == FUNCAO || lookahead->atomo == PROCEDIMENTO) {
         if (lookahead->atomo == FUNCAO)
@@ -300,7 +271,6 @@ void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <lista_variaveis> ::= identificador { ',' identificador } ':' <tipo>
 void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, IDENTIFICADOR, file);
     while (lookahead->atomo == VIRGULA) {
@@ -311,7 +281,6 @@ void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file) {
     identificar_tipo(lookahead, file);
 }
 
-// <declaracao_variaveis> ::= [ var <lista_variaveis> ';' { <lista_variaveis> ';' } ]
 void identificar_declaracao_variaveis(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == VAR) {
         consome(lookahead, VAR, file);
@@ -325,14 +294,12 @@ void identificar_declaracao_variaveis(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-// <bloco> ::= <declaracao_variaveis> <declaracao_de_rotinas> <comando_composto>
 void identificar_bloco(TInfoAtomo* lookahead, FILE* file) {
     identificar_declaracao_variaveis(lookahead, file);
     identificar_declaracao_rotinas(lookahead, file);
     identificar_comando_composto(lookahead, file);
 }
 
-// <programa> ::= algoritmo identificador ';' <bloco> '.'
 void identificar_programa(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ALGORITMO, file);
     consome(lookahead, IDENTIFICADOR, file);

@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude
 
-SRC = main.c src/atomos.c src/lexico.c src/sintatico.c src/utils.c src/verificadores.c
+SRC = main.c src/*.c
 TARGET = a.out
 
 main:
