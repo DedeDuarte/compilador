@@ -5,6 +5,8 @@
 #include "../include/verificadores.h"
 
 #define STR_MAX_SIZE 16
+#define TRUE 1
+#define FALSE 0
 
 void eh_constint(int c, FILE* file, TInfoAtomo* atomo) {
     int value = 0;
@@ -69,13 +71,13 @@ void eh_comparacao(int c, FILE* file, TInfoAtomo* atomo) {
     if (c == '<') {
         c = fgetc(file);
 
-        if (c == '=') // Caso: "<="
+        if (c == '=') // Caso "<="
             atomo->atomo = MENOR_IGUAL;
 
-        else if (c == '>') // Caso: "<>"
+        else if (c == '>') // Caso "<>"
             atomo->atomo = DIFERENTE;
 
-        else { // Caso: "<"
+        else { // Caso "<"
             atomo->atomo = MENOR;
 
             if (c != EOF)
@@ -86,14 +88,48 @@ void eh_comparacao(int c, FILE* file, TInfoAtomo* atomo) {
     else {
         c = fgetc(file);
 
-        if (c == '=') // Caso: ">="
+        if (c == '=') // Caso ">="
             atomo->atomo = MAIOR_IGUAL;
 
-        else { // Caso: ">"
+        else { // Caso ">"
             atomo->atomo = MAIOR;
 
             if (c != EOF)
                 ungetc(c, file);
         }
     }
+}
+
+int eh_comentario(FILE* file, TInfoAtomo* atomo) {
+    int c = fgetc(file);
+
+    int linhas_puladas = 0;
+
+    if (c != '-') {             // Caso não "{-"
+        if (c != EOF)
+            ungetc(c, file);
+
+        return linhas_puladas;
+    }
+
+    while (c != EOF) {
+        c = fgetc(file);
+
+        if (c == '\n')          // Caso "\n"
+            linhas_puladas++;
+
+        if (c == '-') {         // Caso "-..."
+            c = fgetc(file);
+
+            if (c == '}') {     // Caso "-}"
+                atomo->atomo = COMENTARIO;
+                break;
+            }
+
+            else if (c != EOF) // Caso não "-}"
+                ungetc(c, file);
+        }
+    }
+
+    return linhas_puladas;
 }

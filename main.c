@@ -11,7 +11,7 @@ void obter_atomo(FILE* file) {
     TInfoAtomo* atomo = calloc(1, sizeof(TInfoAtomo));
     atomo->linha = 1;
 
-    char c;
+    int c;
     while ((c = fgetc(file)) != EOF) {
         while (c == ' ' || c == '\n' || c == '\t' || c == '\r') {
             if (c == '\n')
@@ -22,6 +22,7 @@ void obter_atomo(FILE* file) {
 
         atomo->atomo = ERRO;
 
+        int linhas_puladas = 0;
         switch (c) {
             case '+': atomo->atomo = SOMA;              break;
             case '-': atomo->atomo = SUBTRACAO;         break;
@@ -52,11 +53,15 @@ void obter_atomo(FILE* file) {
                 eh_comparacao(c, file, atomo);
                 break;
 
+            case '{':
+                linhas_puladas = eh_comentario(file, atomo);
+
             default:
                 break;
         }
 
         print_atomo(atomo);
+        atomo->linha += linhas_puladas;
     }
 }
 
