@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "include/atomos.h"
-#include "include/utils.h"
-#include "include/verificadores.h"
+#include "atomos.h"
+#include "utils.h"
+#include "verificadores.h"
 
 void obter_atomo(FILE* file) {
     TInfoAtomo* atomo = calloc(1, sizeof(TInfoAtomo));
