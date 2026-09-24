@@ -1,3 +1,11 @@
+/*
+ * |==== Grupo (solo) ====|==========|
+ * |         Nome         |    RA    |
+ * |----------------------|----------|
+ * | Andre Doerner Duarte | 10427938 |
+ * |======================|==========|
+ */
+
 #ifndef SINTATICO_H
 #define SINTATICO_H
 

@@ -1,8 +1,7 @@
-# Compilador Portugol
-
+# Compilador
 ## Como compilar e rodar
 
-Na pasta do projeto, execute:
+Rode os seguintes comandos na pasta principal do projeto:
 
 ```sh
 make

@@ -1,3 +1,11 @@
+/*
+ * |==== Grupo (solo) ====|==========|
+ * |         Nome         |    RA    |
+ * |----------------------|----------|
+ * | Andre Doerner Duarte | 10427938 |
+ * |======================|==========|
+ */
+
 #include <stdlib.h>
 
 #include "sintatico.h"

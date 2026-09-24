@@ -1,3 +1,11 @@
+/*
+ * |==== Grupo (solo) ====|==========|
+ * |         Nome         |    RA    |
+ * |----------------------|----------|
+ * | Andre Doerner Duarte | 10427938 |
+ * |======================|==========|
+ */
+
 #include <stdlib.h>
 
 #include "lexico.h"
@@ -46,7 +54,6 @@ TInfoAtomo obter_atomo(FILE* file) {
         
         case 'a' ... 'z':
         case 'A' ... 'Z':
-        case '_':
             eh_alpha(c, file, &atomo);
             break;
 
