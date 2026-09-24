@@ -1,58 +1,63 @@
 #include <stdio.h>
 #include "utils.h"
 
-void print_atomo(TInfoAtomo* atomo) {
-    const char* nome = "erro";
-
-    switch (atomo->atomo) {
-        case ERRO:              nome = "erro"; break;
-        case ALGORITMO:         nome = "algoritmo"; break;
-        case CARACTERE:         nome = "caractere"; break;
-        case DIV:               nome = "div"; break;
-        case E:                 nome = "e"; break;
-        case ENQUANTO:          nome = "enquanto"; break;
-        case ENTAO:             nome = "entao"; break;
-        case ESCREVA:           nome = "escreva"; break;
-        case FACA:              nome = "faca"; break;
-        case FALSO:             nome = "falso"; break;
-        case FIM:               nome = "fim"; break;
-        case FUNCAO:            nome = "funcao"; break;
-        case INICIO:            nome = "inicio"; break;
-        case INTEIRO:           nome = "inteiro"; break;
-        case LEIA:              nome = "leia"; break;
-        case LOGICO:            nome = "logico"; break;
-        case MOD:               nome = "mod"; break;
-        case OU:                nome = "ou"; break;
-        case PROCEDIMENTO:      nome = "procedimento"; break;
-        case SE:                nome = "se"; break;
-        case SENAO:             nome = "senao"; break;
-        case VAR:               nome = "var"; break;
-        case VERDADEIRO:        nome = "verdadeiro"; break;
-        case IDENTIFICADOR:     nome = "identificador"; break;
-        case CONSTINT:          nome = "constint"; break;
-        case CONSTCHAR:         nome = "constchar"; break;
-        case ATRIBUICAO:        nome = "atribuicao"; break;
-        case SOMA:              nome = "soma"; break;
-        case SUBTRACAO:         nome = "subtracao"; break;
-        case MULTIPLICACAO:     nome = "multiplicacao"; break;
-        case MENOR:             nome = "menor"; break;
-        case MENOR_IGUAL:       nome = "menor_igual"; break;
-        case MAIOR:             nome = "maior"; break;
-        case MAIOR_IGUAL:       nome = "maior_igual"; break;
-        case DIFERENTE:         nome = "diferente"; break;
-        case IGUAL:             nome = "igual"; break;
-        case PONTO_VIRGULA:     nome = "ponto_virgula"; break;
-        case VIRGULA:           nome = "virgula"; break;
-        case PONTO:             nome = "ponto"; break;
-        case DOIS_PONTOS:       nome = "dois_pontos"; break;
-        case ABRE_PARENTESE:    nome = "abre_par"; break;
-        case FECHA_PARENTESE:   nome = "fecha_par"; break;
-        case COMENTARIO:        nome = "comentario"; break;
-        case EOS:               nome = "eos"; break;
+const char* atomo_para_str(TAtomo atomo) {
+    switch (atomo) {
+        case ERRO:              return "erro";
+        case ALGORITMO:         return "algoritmo";
+        case CARACTERE:         return "caractere";
+        case DIV:               return "div";
+        case E:                 return "e";
+        case ENQUANTO:          return "enquanto";
+        case ENTAO:             return "entao";
+        case ESCREVA:           return "escreva";
+        case FACA:              return "faca";
+        case FALSO:             return "falso";
+        case FIM:               return "fim";
+        case FUNCAO:            return "funcao";
+        case INICIO:            return "inicio";
+        case INTEIRO:           return "inteiro";
+        case LEIA:              return "leia";
+        case LOGICO:            return "logico";
+        case MOD:               return "mod";
+        case NAO:               return "nao";
+        case OU:                return "ou";
+        case PROCEDIMENTO:      return "procedimento";
+        case SE:                return "se";
+        case SENAO:             return "senao";
+        case VAR:               return "var";
+        case VERDADEIRO:        return "verdadeiro";
+        case IDENTIFICADOR:     return "identificador";
+        case CONSTINT:          return "constint";
+        case CONSTCHAR:         return "constchar";
+        case ATRIBUICAO:        return "atribuicao";
+        case SOMA:              return "soma";
+        case SUBTRACAO:         return "subtracao";
+        case MULTIPLICACAO:     return "multiplicacao";
+        case MENOR:             return "menor";
+        case MENOR_IGUAL:       return "menor_igual";
+        case MAIOR:             return "maior";
+        case MAIOR_IGUAL:       return "maior_igual";
+        case DIFERENTE:         return "diferente";
+        case IGUAL:             return "igual";
+        case PONTO_VIRGULA:     return "ponto_virgula";
+        case VIRGULA:           return "virgula";
+        case PONTO:             return "ponto";
+        case DOIS_PONTOS:       return "dois_pontos";
+        case ABRE_PARENTESE:    return "abre_par";
+        case FECHA_PARENTESE:   return "fecha_par";
+        case COMENTARIO:        return "comentario";
+        case EOS:               return "eos";
     }
 
+    return "erro";
+}
+
+void print_atomo(TInfoAtomo* atomo) {
+    const char* nome = atomo_para_str(atomo->atomo);
+
     if (atomo->atomo == ERRO)
-        printf("#%d: " "\033[38;2;255;0;0m" "%s" "\033[0m", atomo->linha, nome);
+        printf("#%d: " COR_VERMELHO "%s" COR_NORMAL, atomo->linha, nome);
     else
         printf("#%d: %s", atomo->linha, nome);
 

@@ -10,7 +10,7 @@ typedef enum {
     ESCREVA,        FACA,           FALSO,
     FIM,            FUNCAO,         INICIO,
     INTEIRO,        LEIA,           LOGICO,
-    MOD,            OU,             PROCEDIMENTO,
+    MOD,            NAO,            OU,             PROCEDIMENTO,
     SE,             SENAO,          VAR,
     VERDADEIRO,
 
