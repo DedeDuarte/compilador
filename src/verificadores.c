@@ -2,7 +2,7 @@
 #include <limits.h>
 #include <string.h>
 
-#include "../include/verificadores.h"
+#include "verificadores.h"
 
 #define STR_MAX_SIZE 16
 #define TRUE 1
