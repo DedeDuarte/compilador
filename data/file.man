@@ -32,7 +32,7 @@ INICIO
     SE numero < outro_numero ENTAO
         escreva('m')
     SENAO
-        escreva('n');
+        escreva('n')
 
 FIM.
 

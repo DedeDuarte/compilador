@@ -8,7 +8,7 @@ main:
 	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 
 run: main
-	./$(TARGET) data/file2.man
+	./$(TARGET) data/file.man
 
 clean:
 	rm -f $(TARGET)
