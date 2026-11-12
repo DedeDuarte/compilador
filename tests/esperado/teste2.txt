@@ -1,0 +1,12 @@
+#1: algoritmo
+#1: identificador -> ex2
+#1: ponto_virgula
+#2: inicio
+#3: escreva
+#3: abre_par
+#3: identificador -> maior
+[38;2;255;0;0m#3: Erro sintatico:
+    Esperado [fecha_par]
+    Recebido [ponto_virgula]
+    #3: ponto_virgula
+[0m

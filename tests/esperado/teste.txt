@@ -1,0 +1,119 @@
+#1: comentario
+#3: algoritmo
+#3: identificador -> teste_lexico
+#3: ponto_virgula
+#5: var
+#6: identificador -> numero
+#6: virgula
+#6: identificador -> outro_numero
+#6: dois_pontos
+#6: inteiro
+#6: ponto_virgula
+#7: identificador -> letra
+#7: dois_pontos
+#7: caractere
+#7: ponto_virgula
+#8: identificador -> ativo
+#8: dois_pontos
+#8: logico
+#8: ponto_virgula
+#10: inicio
+#11: identificador -> numero
+#11: atribuicao
+#11: constint -> 123
+#11: ponto_virgula
+#12: identificador -> outro_numero
+#12: atribuicao
+#12: constint -> 1200
+#12: ponto_virgula
+#13: identificador -> letra
+#13: atribuicao
+#13: constchar -> 'a'
+#13: ponto_virgula
+#14: identificador -> ativo
+#14: atribuicao
+#14: verdadeiro
+#14: ponto_virgula
+#16: leia
+#16: abre_par
+#16: identificador -> numero
+#16: virgula
+#16: identificador -> outro_numero
+#16: fecha_par
+#16: ponto_virgula
+#17: escreva
+#17: abre_par
+#17: identificador -> numero
+#17: virgula
+#17: identificador -> outro_numero
+#17: virgula
+#17: identificador -> letra
+#17: fecha_par
+#17: ponto_virgula
+#19: se
+#19: identificador -> numero
+#19: diferente
+#19: identificador -> outro_numero
+#19: entao
+#20: identificador -> numero
+#20: atribuicao
+#20: identificador -> numero
+#20: soma
+#20: constint -> 1
+#21: senao
+#22: identificador -> numero
+#22: atribuicao
+#22: identificador -> numero
+#22: subtracao
+#22: constint -> 1
+#22: ponto_virgula
+#24: enquanto
+#24: identificador -> numero
+#24: menor_igual
+#24: constint -> 100
+#24: faca
+#25: identificador -> numero
+#25: atribuicao
+#25: identificador -> numero
+#25: multiplicacao
+#25: constint -> 2
+#25: ponto_virgula
+#27: comentario
+#28: identificador -> numero
+#28: atribuicao
+#28: abre_par
+#28: identificador -> numero
+#28: div
+#28: constint -> 2
+#28: fecha_par
+#28: mod
+#28: constint -> 3
+#28: ponto_virgula
+#29: identificador -> ativo
+#29: atribuicao
+#29: verdadeiro
+#29: ou
+#29: falso
+#29: e
+#29: nao
+#29: falso
+#29: ponto_virgula
+#31: comentario
+#32: se
+#32: identificador -> numero
+#32: menor
+#32: identificador -> outro_numero
+#32: entao
+#33: escreva
+#33: abre_par
+#33: constchar -> 'm'
+#33: fecha_par
+#34: senao
+#35: escreva
+#35: abre_par
+#35: constchar -> 'n'
+#35: fecha_par
+#37: fim
+#37: ponto
+#39: comentario
+40 linhas analisadas, programa sintaticamente correto

@@ -1,0 +1,53 @@
+#1: comentario
+#4: algoritmo
+#4: identificador -> ex1
+#4: ponto_virgula
+#5: var
+#5: identificador -> num_1
+#5: virgula
+#5: identificador -> num_2
+#5: dois_pontos
+#5: inteiro
+#5: ponto_virgula
+#5: identificador -> maior
+#5: dois_pontos
+#5: inteiro
+#5: ponto_virgula
+#5: identificador -> teste
+#5: dois_pontos
+#5: caractere
+#5: ponto_virgula
+#6: inicio
+#7: leia
+#7: abre_par
+#7: identificador -> num_1
+#7: virgula
+#7: identificador -> num_2
+#7: fecha_par
+#7: ponto_virgula
+#8: se
+#8: identificador -> num_1
+#8: maior
+#8: identificador -> num_2
+#8: entao
+#9: identificador -> maior
+#9: atribuicao
+#9: identificador -> num_1
+#10: senao
+#11: identificador -> maior
+#11: atribuicao
+#11: identificador -> num_2
+#11: ponto_virgula
+#12: identificador -> teste
+#12: atribuicao
+#12: constchar -> 'f'
+#12: ponto_virgula
+#12: comentario
+#13: escreva
+#13: abre_par
+#13: identificador -> maior
+#13: fecha_par
+#13: comentario
+#14: fim
+#14: ponto
+14 linhas analisadas, programa sintaticamente correto

@@ -1,0 +1,13 @@
+palavra [a] entrada na tabela Hash [97]
+palavra [b] entrada na tabela Hash [98]
+palavra [c] entrada na tabela Hash [99]
+palavra [d] entrada na tabela Hash [100]
+palavra [v1] entrada na tabela Hash [38]
+palavra [v2] entrada na tabela Hash [39]
+palavra [aa] entrada na tabela Hash [172]
+palavra [bb] entrada na tabela Hash [189]
+palavra [cc] entrada na tabela Hash [206]
+palavra [dd] entrada na tabela Hash [12]
+palavra [ee] entrada na tabela Hash [29]
+
+fim do programa
