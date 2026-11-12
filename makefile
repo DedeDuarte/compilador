@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Wno-unused-result -Iinclude -g -Og
 
-SRC = main.c src/*.c
+SRC = src/*.c
 TARGET = compilador
 
 main:
