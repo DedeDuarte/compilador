@@ -32,13 +32,7 @@ typedef struct { TNo *entradas[PRIME_NUMER]; } TTabelaSimbolos;
 
 ## Gramática
 
-Única mudança: `<fator>` aceita constante hexa estilo C (`0x1F`). Isso exige o átomo `CONSTHEXA` em [include/atomos.h](../include/atomos.h) e seu reconhecimento no léxico ([src/lexico.c](../src/lexico.c)).
-
-```text
-<fator> ::= identificador [ '(' <lista_expressao> ')' ] | constint | constchar |
-            '(' <expressao> ')' | ( '+' | '-' | nao ) <fator> |
-            verdadeiro | falso | consthexa
-```
+Não muda na fase 2: vale a gramática da fase 1. A produção `<fator>` com `consthexa` e as variáveis `arrxyz` (proj_2b) e de flag (proj_1b) são texto oculto nos PDFs, não requisito.
 
 ## Código MEPA
 
