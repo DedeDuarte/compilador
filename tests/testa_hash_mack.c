@@ -1,9 +1,9 @@
 /*
-Para compilar use:
-gcc -Wall -Wno-unused-result -g -Og testa_hash_mack.c hash_mack.o -o testa_hash_mack
+Para compilar use (a partir da raiz do projeto):
+gcc -Wall -Wno-unused-result -g -Og tests/testa_hash_mack.c lib/hash_mack.o -o tests/testa_hash_mack
 
 Para executar use:
-./testa_hash_mack a b c d v1 v2 aa bb cc dd ee 
+./tests/testa_hash_mack a b c d v1 v2 aa bb cc dd ee 
 */
 #include <stdio.h>
 
