@@ -17,4 +17,7 @@ run: all
 clean:
 	rm -f $(TARGET)
 
-.PHONY: all run clean
+test:
+	./tests/rodar_testes.sh
+
+.PHONY: all run test clean
