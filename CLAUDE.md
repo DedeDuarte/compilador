@@ -5,6 +5,16 @@ Compilador em C para Portugol (baseada em Pascal), projeto solo de Compiladores 
 - Fase 1 (léxico + sintático): concluída, release `v1.0.0`, usada só para comparação.
 - Fase 2 (semântico + código MEPA): em implementação. Use @docs/CLAUDE.md ([abrir](docs/CLAUDE.md)) como referência dos requisitos do projeto.
 
+## Slides do professor
+
+Cópia local do Moodle em [~/Slides/6s/Compiladores](/home/dededuarte/Slides/6s/Compiladores) ([README](/home/dededuarte/Slides/6s/Compiladores/README.md) com o índice). Consulte para tirar dúvidas e ver como o professor quer as coisas.
+
+- [Enunciado do trabalho 2 (PDF)](/home/dededuarte/Slides/6s/Compiladores/09-Semana-26-out-a-1-nov/arquivos/2026_2_trab2_semantico_geracao_codigo.pdf)
+- [Aulas de MEPA](/home/dededuarte/Slides/6s/Compiladores/08-Semana-19-a-25-outubro/arquivos): [procedimentos](/home/dededuarte/Slides/6s/Compiladores/10-Semana-2-a-8-novembro/arquivos/Aula7(MEPA)_procedimentos.md) e [funções](/home/dededuarte/Slides/6s/Compiladores/11-Semana-9-a-15-novembro/arquivos/Aula8(MEPA)_funcoes.md)
+- Arquivos `.mepa` de exemplo ficam nas pastas `arquivos/` das semanas 10 e 11.
+- Prazo do trabalho 2: 23/11/2026, 23:00. Prova 2: 24/11/2026.
+- O enunciado pede **uma única** Tabela de Símbolos, com o escopo como campo do nó.
+
 ## Regras de trabalho
 
 - **Nunca faça commit sem minha permissão.**
