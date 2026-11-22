@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "atomos.h"
+#include "tabela_simbolos.h"
 
 // <fator> ::= identificador [ '(' <lista_expressao> ')' ] | constint | constchar |
 //             '(' <expressao> ')' | ( '+' | '-' | nao ) <fator> | verdadeiro | falso
@@ -88,7 +89,7 @@ void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file);
 void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file);
 
 // <lista_variaveis> ::= identificador { ',' identificador } ':' <tipo>
-void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file);
+void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file, TCategoria categoria);
 
 // <declaracao_variaveis> ::= [ var <lista_variaveis> ';' { <lista_variaveis> ';' } ]
 void identificar_declaracao_variaveis(TInfoAtomo* lookahead, FILE* file);

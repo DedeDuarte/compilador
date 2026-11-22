@@ -7,6 +7,7 @@
  */
 
 #include "identificadores.h"
+#include "semantico.h"
 #include "sintatico.h"
 
 void identificar_fator(TInfoAtomo* lookahead, FILE* file) {
@@ -219,7 +220,7 @@ void identificar_parametro_formal(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == VAR)
         consome(lookahead, VAR, file);
 
-    identificar_lista_variaveis(lookahead, file);
+    identificar_lista_variaveis(lookahead, file, CAT_PARAMETRO);
 }
 
 void identificar_parametros_formais(TInfoAtomo* lookahead, FILE* file) {
@@ -234,6 +235,7 @@ void identificar_parametros_formais(TInfoAtomo* lookahead, FILE* file) {
         }
     }
 
+    calcular_enderecos_parametros();
     consome(lookahead, FECHA_PARENTESE, file);
 }
 
@@ -255,19 +257,25 @@ void identificar_tipo(TInfoAtomo* lookahead, FILE* file) {
 
 void identificar_declaracao_procedimento(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, PROCEDIMENTO, file);
+    declarar_identificador(lookahead, CAT_PROCEDIMENTO);
     consome(lookahead, IDENTIFICADOR, file);
+    entrar_rotina();
     identificar_parametros_formais(lookahead, file);
     identificar_declaracao_variaveis(lookahead, file);
     identificar_comando_composto(lookahead, file);
+    sair_rotina();
 }
 
 void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FUNCAO, file);
     identificar_tipo(lookahead, file);
+    declarar_identificador(lookahead, CAT_FUNCAO);
     consome(lookahead, IDENTIFICADOR, file);
+    entrar_rotina();
     identificar_parametros_formais(lookahead, file);
     identificar_declaracao_variaveis(lookahead, file);
     identificar_comando_composto(lookahead, file);
+    sair_rotina();
 }
 
 void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file) {
@@ -279,10 +287,12 @@ void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file) {
+void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file, TCategoria categoria) {
+    declarar_identificador(lookahead, categoria);
     consome(lookahead, IDENTIFICADOR, file);
     while (lookahead->atomo == VIRGULA) {
         consome(lookahead, VIRGULA, file);
+        declarar_identificador(lookahead, categoria);
         consome(lookahead, IDENTIFICADOR, file);
     }
     consome(lookahead, DOIS_PONTOS, file);
@@ -292,11 +302,11 @@ void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file) {
 void identificar_declaracao_variaveis(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == VAR) {
         consome(lookahead, VAR, file);
-        identificar_lista_variaveis(lookahead, file);
+        identificar_lista_variaveis(lookahead, file, CAT_VARIAVEL);
         consome(lookahead, PONTO_VIRGULA, file);
 
         while (lookahead->atomo == IDENTIFICADOR) {
-            identificar_lista_variaveis(lookahead, file);
+            identificar_lista_variaveis(lookahead, file, CAT_VARIAVEL);
             consome(lookahead, PONTO_VIRGULA, file);
         }
     }

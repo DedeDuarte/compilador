@@ -11,6 +11,7 @@
 #include "sintatico.h"
 #include "identificadores.h"
 #include "lexico.h"
+#include "semantico.h"
 #include "utils.h"
 
 void _erro_sintatico(TInfoAtomo* lookahead, const char* esperado_str) {
@@ -70,6 +71,7 @@ void analizar(FILE* file) {
 
     avancar(&lookahead, file);
     identificar_programa(&lookahead, file);
+    liberar_tabela(&tabela);
 
     printf("%d linhas analisadas, programa sintaticamente correto\n", lookahead.linha);
 }
