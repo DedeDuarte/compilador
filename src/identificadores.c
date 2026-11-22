@@ -12,14 +12,26 @@
 
 void identificar_fator(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
-        case IDENTIFICADOR:
+        case IDENTIFICADOR: {
+            TNo* no = buscar_identificador(lookahead);
+            int linha = lookahead->linha;
+            int qtd = 0;
+
             consome(lookahead, IDENTIFICADOR, file);
             if (lookahead->atomo == ABRE_PARENTESE) {
+                verificar_chamada_funcao(no, linha);
                 consome(lookahead, ABRE_PARENTESE, file);
-                identificar_lista_expressao(lookahead, file);
+                qtd = identificar_lista_expressao(lookahead, file);
                 consome(lookahead, FECHA_PARENTESE, file);
             }
+            else {
+                verificar_valor(no, linha);
+            }
+
+            if (no->categoria == CAT_FUNCAO)
+                verificar_argumentos(no, qtd, linha);
             break;
+        }
         case CONSTINT:
         case CONSTCHAR:
         case VERDADEIRO:
@@ -113,21 +125,32 @@ void identificar_expressao(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-void identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file) {
+// Devolve a quantidade de expressoes da lista
+int identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file) {
+    int qtd = 1;
+
     identificar_expressao(lookahead, file);
 
     while (lookahead->atomo == VIRGULA) {
         consome(lookahead, VIRGULA, file);
         identificar_expressao(lookahead, file);
+        qtd++;
     }
+
+    return qtd;
 }
 
-void identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file) {
+// Devolve a quantidade de argumentos da chamada
+int identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file) {
+    int qtd = 0;
+
     if (lookahead->atomo == ABRE_PARENTESE) {
         consome(lookahead, ABRE_PARENTESE, file);
-        identificar_lista_expressao(lookahead, file);
+        qtd = identificar_lista_expressao(lookahead, file);
         consome(lookahead, FECHA_PARENTESE, file);
     }
+
+    return qtd;
 }
 
 void identificar_comando_repeticao(TInfoAtomo* lookahead, FILE* file) {
@@ -157,13 +180,24 @@ void identificar_comando_saida(TInfoAtomo* lookahead, FILE* file) {
 }
 
 void identificar_comando_entrada(TInfoAtomo* lookahead, FILE* file) {
+    TNo* no;
+    int linha;
+
     consome(lookahead, LEIA, file);
     consome(lookahead, ABRE_PARENTESE, file);
+
+    no = buscar_identificador(lookahead);
+    linha = lookahead->linha;
     consome(lookahead, IDENTIFICADOR, file);
+    verificar_leitura(no, linha);
 
     while (lookahead->atomo == VIRGULA) {
         consome(lookahead, VIRGULA, file);
+
+        no = buscar_identificador(lookahead);
+        linha = lookahead->linha;
         consome(lookahead, IDENTIFICADOR, file);
+        verificar_leitura(no, linha);
     }
 
     consome(lookahead, FECHA_PARENTESE, file);
@@ -176,14 +210,21 @@ void identificar_comando_atribuicao(TInfoAtomo* lookahead, FILE* file) {
 
 void identificar_comando(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
-        case IDENTIFICADOR:
-        
+        case IDENTIFICADOR: {
+            TNo* no = buscar_identificador(lookahead);
+            int linha = lookahead->linha;
+
             consome(lookahead, IDENTIFICADOR, file);
-            if (lookahead->atomo == ATRIBUICAO)
+            if (lookahead->atomo == ATRIBUICAO) {
+                verificar_atribuicao(no, linha);
                 identificar_comando_atribuicao(lookahead, file);
-            else
-                identificar_chamada_procedimento(lookahead, file);
+            }
+            else {
+                verificar_chamada_procedimento(no, linha);
+                verificar_argumentos(no, identificar_chamada_procedimento(lookahead, file), linha);
+            }
             break;
+        }
         case LEIA:
             identificar_comando_entrada(lookahead, file);
             break;
@@ -257,9 +298,9 @@ void identificar_tipo(TInfoAtomo* lookahead, FILE* file) {
 
 void identificar_declaracao_procedimento(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, PROCEDIMENTO, file);
-    declarar_identificador(lookahead, CAT_PROCEDIMENTO);
+    TNo* rotina = declarar_identificador(lookahead, CAT_PROCEDIMENTO);
     consome(lookahead, IDENTIFICADOR, file);
-    entrar_rotina();
+    entrar_rotina(rotina);
     identificar_parametros_formais(lookahead, file);
     identificar_declaracao_variaveis(lookahead, file);
     identificar_comando_composto(lookahead, file);
@@ -269,9 +310,9 @@ void identificar_declaracao_procedimento(TInfoAtomo* lookahead, FILE* file) {
 void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FUNCAO, file);
     identificar_tipo(lookahead, file);
-    declarar_identificador(lookahead, CAT_FUNCAO);
+    TNo* rotina = declarar_identificador(lookahead, CAT_FUNCAO);
     consome(lookahead, IDENTIFICADOR, file);
-    entrar_rotina();
+    entrar_rotina(rotina);
     identificar_parametros_formais(lookahead, file);
     identificar_declaracao_variaveis(lookahead, file);
     identificar_comando_composto(lookahead, file);

@@ -37,11 +37,11 @@ void identificar_operador_relacional(TInfoAtomo* lookahead, FILE* file);
 void identificar_expressao(TInfoAtomo* lookahead, FILE* file);
 
 // <lista_expressao> ::= <expressao> { ',' <expressao> }
-void identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file);
+int identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file);
 
 // <chamada_procedimento> ::= identificador [ '(' <lista_expressao> ')' ]
 // O identificador ja foi consumido em identificar_comando().
-void identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file);
+int identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file);
 
 // <comando_repeticao> ::= enquanto <expressao> faca <comando>
 void identificar_comando_repeticao(TInfoAtomo* lookahead, FILE* file);

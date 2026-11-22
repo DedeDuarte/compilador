@@ -17,11 +17,20 @@ extern int escopo_atual;
 
 void _erro_semantico(int linha, const char* id, const char* mensagem);
 
-void declarar_identificador(TInfoAtomo* lookahead, TCategoria categoria);
+TNo* declarar_identificador(TInfoAtomo* lookahead, TCategoria categoria);
 
 void calcular_enderecos_parametros(void);
 
-void entrar_rotina(void);
+void entrar_rotina(TNo* rotina);
 void sair_rotina(void);
+
+TNo* buscar_identificador(TInfoAtomo* lookahead);
+
+void verificar_valor(TNo* no, int linha);
+void verificar_chamada_funcao(TNo* no, int linha);
+void verificar_chamada_procedimento(TNo* no, int linha);
+void verificar_atribuicao(TNo* no, int linha);
+void verificar_leitura(TNo* no, int linha);
+void verificar_argumentos(TNo* no, int qtd, int linha);
 
 #endif
