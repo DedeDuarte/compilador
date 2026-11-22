@@ -46,6 +46,7 @@ int inserir_simbolo(TTabelaSimbolos* tabela, char* id, TCategoria categoria, int
     novo->categoria = categoria;
     novo->escopo = escopo;
     novo->endereco = endereco;
+    novo->qtd_parametros = 0;
 
     // Insere no inicio da lista da entrada
     int entrada = hashMack(id);

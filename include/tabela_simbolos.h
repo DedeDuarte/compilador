@@ -26,6 +26,7 @@ typedef struct _TNo {
     int endereco;
     TCategoria categoria;
     int escopo;
+    int qtd_parametros;     // so para funcao e procedimento
     struct _TNo *prox;
 } TNo;
 
