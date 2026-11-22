@@ -68,3 +68,27 @@ void liberar_tabela(TTabelaSimbolos* tabela) {
         tabela->entradas[i] = NULL;
     }
 }
+
+void remover_locais(TTabelaSimbolos* tabela) {
+    for (int i = 0; i < PRIME_NUMER; i++) {
+        TNo* anterior = NULL;
+        TNo* atual = tabela->entradas[i];
+
+        while (atual != NULL) {
+            TNo* proximo = atual->prox;
+
+            if (atual->escopo == ESC_LOCAL) {
+                if (anterior == NULL)
+                    tabela->entradas[i] = proximo;
+                else
+                    anterior->prox = proximo;
+                free(atual);
+            }
+            else {
+                anterior = atual;
+            }
+
+            atual = proximo;
+        }
+    }
+}

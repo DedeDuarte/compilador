@@ -41,4 +41,6 @@ TNo* buscar_simbolo(TTabelaSimbolos* tabela, char* id, int escopo);
 
 void liberar_tabela(TTabelaSimbolos* tabela);
 
+void remover_locais(TTabelaSimbolos* tabela);
+
 #endif
