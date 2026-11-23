@@ -1,9 +1,0 @@
-   INPP
-   AMEM 3
-   CRVL 0,0
-   IMPR
-[38;2;255;0;0m#4: Erro sintatico:
-    Esperado [fecha_par]
-    Recebido [ponto_virgula]
-    #4: ponto_virgula
-[0m

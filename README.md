@@ -40,8 +40,7 @@ Para apagar o executável, use `make clean`.
   - [utils.c](src/utils.c): exibição dos átomos
 - [include/](include/): um `.h` para cada `.c` acima, exceto [main.c](src/main.c)
 - [lib/](lib/): objeto pré-compilado [hash_mack.o](lib/hash_mack.o)
-- [tests/](tests/): programa de teste da `hashMack`, [testa_hash_mack.c](tests/testa_hash_mack.c)
 - [data/](data/): programas de entrada `.man` ([teste.man](data/teste.man), [teste1.man](data/teste1.man), [teste2.man](data/teste2.man))
-- [docs/](docs/): enunciados em PDF ([proj_1b.pdf](docs/proj_1b.pdf), [proj_2b.pdf](docs/proj_2b.pdf)) e [CLAUDE.md](docs/CLAUDE.md)
+- [docs/](docs/): enunciados em PDF ([proj_1b.pdf](docs/proj_1b.pdf), [proj_2b.pdf](docs/proj_2b.pdf))
 - [Makefile](Makefile): comando de compilação
-- [README.txt](README.txt): arquivo de entrega
+- [readme.txt](readme.txt): arquivo de entrega
