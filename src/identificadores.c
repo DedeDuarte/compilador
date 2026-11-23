@@ -7,23 +7,60 @@
  */
 
 #include "identificadores.h"
+#include "mepa.h"
+#include "semantico.h"
 #include "sintatico.h"
 
 void identificar_fator(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
-        case IDENTIFICADOR:
+        case IDENTIFICADOR: {
+            TNo* no = buscar_identificador(lookahead);
+            int linha = lookahead->linha;
+            int qtd = 0;
+
             consome(lookahead, IDENTIFICADOR, file);
             if (lookahead->atomo == ABRE_PARENTESE) {
+                verificar_chamada_funcao(no, linha);
+                printf("   AMEM 1\n");
                 consome(lookahead, ABRE_PARENTESE, file);
-                identificar_lista_expressao(lookahead, file);
+                qtd = identificar_lista_expressao(lookahead, file, no);
                 consome(lookahead, FECHA_PARENTESE, file);
             }
+            else {
+                verificar_valor(no, linha);
+                if (no->categoria == CAT_FUNCAO)
+                    printf("   AMEM 1\n");
+            }
+
+            if (no->categoria == CAT_FUNCAO) {
+                verificar_argumentos(no, qtd, linha);
+                printf("   CHPR L%d\n", no->rotulo);
+                if (no->qtd_parametros > 0)
+                    printf("   DMEM %d\n", no->qtd_parametros);
+            }
+            else if (no->referencia) {
+                printf("   CRVI %d,%d\n", no->escopo, no->endereco);
+            }
+            else {
+                printf("   CRVL %d,%d\n", no->escopo, no->endereco);
+            }
             break;
+        }
         case CONSTINT:
+            printf("   CRCT %d\n", lookahead->atributo.numero);
+            consome(lookahead, CONSTINT, file);
+            break;
         case CONSTCHAR:
+            printf("   CRCT %d\n", lookahead->atributo.ch);
+            consome(lookahead, CONSTCHAR, file);
+            break;
         case VERDADEIRO:
+            printf("   CRCT 1\n");
+            consome(lookahead, VERDADEIRO, file);
+            break;
         case FALSO:
-            consome(lookahead, lookahead->atomo, file);
+            printf("   CRCT 0\n");
+            consome(lookahead, FALSO, file);
             break;
         case ABRE_PARENTESE:
             consome(lookahead, ABRE_PARENTESE, file);
@@ -31,10 +68,18 @@ void identificar_fator(TInfoAtomo* lookahead, FILE* file) {
             consome(lookahead, FECHA_PARENTESE, file);
             break;
         case SOMA:
-        case SUBTRACAO:
-        case NAO:
-            consome(lookahead, lookahead->atomo, file);
+            consome(lookahead, SOMA, file);
             identificar_fator(lookahead, file);
+            break;
+        case SUBTRACAO:
+            consome(lookahead, SUBTRACAO, file);
+            identificar_fator(lookahead, file);
+            printf("   INVR\n");
+            break;
+        case NAO:
+            consome(lookahead, NAO, file);
+            identificar_fator(lookahead, file);
+            printf("   NEGA\n");
             break;
         default:
             _erro_sintatico(lookahead, "fator");
@@ -58,8 +103,17 @@ void identificar_termo(TInfoAtomo* lookahead, FILE* file) {
 
     while (lookahead->atomo == MULTIPLICACAO ||
            lookahead->atomo == DIV || lookahead->atomo == E) {
+        TAtomo operador = lookahead->atomo;
+
         identificar_operador_multiplicacao(lookahead, file);
         identificar_fator(lookahead, file);
+
+        if (operador == MULTIPLICACAO)
+            printf("   MULT\n");
+        else if (operador == DIV)
+            printf("   DIVI\n");
+        else
+            printf("   CONJ\n");
     }
 }
 
@@ -81,8 +135,34 @@ void identificar_expressao_simples(TInfoAtomo* lookahead, FILE* file) {
 
     while (lookahead->atomo == SOMA || lookahead->atomo == SUBTRACAO ||
            lookahead->atomo == MOD || lookahead->atomo == OU) {
+        TAtomo operador = lookahead->atomo;
+
         identificar_operador_adicao(lookahead, file);
         identificar_termo(lookahead, file);
+
+        if (operador == SOMA) {
+            printf("   SOMA\n");
+        }
+        else if (operador == SUBTRACAO) {
+            printf("   SUBT\n");
+        }
+        else if (operador == OU) {
+            printf("   DISJ\n");
+        }
+        else {
+            // A VM nao tem resto: a mod b = a - (a div b) * b, com a e b em 2 temporarias
+            int t = base_temporaria();
+
+            printf("   ARMZ 0,%d\n", t + 1);
+            printf("   ARMZ 0,%d\n", t);
+            printf("   CRVL 0,%d\n", t);
+            printf("   CRVL 0,%d\n", t);
+            printf("   CRVL 0,%d\n", t + 1);
+            printf("   DIVI\n");
+            printf("   CRVL 0,%d\n", t + 1);
+            printf("   MULT\n");
+            printf("   SUBT\n");
+        }
     }
 }
 
@@ -107,62 +187,156 @@ void identificar_expressao(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == DIFERENTE || lookahead->atomo == MENOR ||
         lookahead->atomo == MENOR_IGUAL || lookahead->atomo == MAIOR_IGUAL ||
         lookahead->atomo == MAIOR || lookahead->atomo == IGUAL) {
+        TAtomo operador = lookahead->atomo;
+
         identificar_operador_relacional(lookahead, file);
         identificar_expressao_simples(lookahead, file);
+
+        switch (operador) {
+            case DIFERENTE:    printf("   CMDG\n"); break;
+            case MENOR:        printf("   CMME\n"); break;
+            case MENOR_IGUAL:  printf("   CMEG\n"); break;
+            case MAIOR_IGUAL:  printf("   CMAG\n"); break;
+            case MAIOR:        printf("   CMMA\n"); break;
+            default:           printf("   CMIG\n"); break;
+        }
     }
 }
 
-void identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file) {
-    identificar_expressao(lookahead, file);
+void identificar_argumento(TInfoAtomo* lookahead, FILE* file, TNo* rotina, int i) {
+    if (i >= rotina->qtd_parametros || !rotina->ref_parametros[i]) {
+        identificar_expressao(lookahead, file);
+        return;
+    }
+
+    if (lookahead->atomo != IDENTIFICADOR)
+        _erro_semantico(lookahead->linha, rotina->ID, "precisa de uma variavel no parametro var");
+
+    TNo* no = buscar_identificador(lookahead);
+    int linha = lookahead->linha;
+
+    consome(lookahead, IDENTIFICADOR, file);
+    verificar_leitura(no, linha);
+
+    if (lookahead->atomo != VIRGULA && lookahead->atomo != FECHA_PARENTESE)
+        _erro_semantico(lookahead->linha, rotina->ID, "precisa de uma variavel no parametro var");
+
+    if (no->referencia)
+        printf("   CRVL %d,%d\n", no->escopo, no->endereco);
+    else
+        printf("   CREN %d,%d\n", no->escopo, no->endereco);
+}
+
+// Devolve a quantidade de expressoes da lista
+int identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file, TNo* rotina) {
+    int qtd = 1;
+
+    identificar_argumento(lookahead, file, rotina, 0);
 
     while (lookahead->atomo == VIRGULA) {
         consome(lookahead, VIRGULA, file);
-        identificar_expressao(lookahead, file);
+        identificar_argumento(lookahead, file, rotina, qtd);
+        qtd++;
     }
+
+    return qtd;
 }
 
-void identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file) {
+// Devolve a quantidade de argumentos da chamada
+int identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file, TNo* rotina) {
+    int qtd = 0;
+
     if (lookahead->atomo == ABRE_PARENTESE) {
         consome(lookahead, ABRE_PARENTESE, file);
-        identificar_lista_expressao(lookahead, file);
+        qtd = identificar_lista_expressao(lookahead, file, rotina);
         consome(lookahead, FECHA_PARENTESE, file);
     }
+
+    return qtd;
 }
 
 void identificar_comando_repeticao(TInfoAtomo* lookahead, FILE* file) {
+    int inicio = novo_rotulo();
+    int fim = novo_rotulo();
+
     consome(lookahead, ENQUANTO, file);
+    printf("L%d:NADA\n", inicio);
     identificar_expressao(lookahead, file);
+    printf("   DSVF L%d\n", fim);
     consome(lookahead, FACA, file);
     identificar_comando(lookahead, file);
+    printf("   DSVS L%d\n", inicio);
+    printf("L%d:NADA\n", fim);
 }
 
 void identificar_comando_condicional(TInfoAtomo* lookahead, FILE* file) {
+    int senao = novo_rotulo();
+
     consome(lookahead, SE, file);
     identificar_expressao(lookahead, file);
+    printf("   DSVF L%d\n", senao);
     consome(lookahead, ENTAO, file);
     identificar_comando(lookahead, file);
 
     if (lookahead->atomo == SENAO) {
+        int fim = novo_rotulo();
+
+        printf("   DSVS L%d\n", fim);
+        printf("L%d:NADA\n", senao);
         consome(lookahead, SENAO, file);
         identificar_comando(lookahead, file);
+        printf("L%d:NADA\n", fim);
+    }
+    else {
+        printf("L%d:NADA\n", senao);
     }
 }
 
 void identificar_comando_saida(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ESCREVA, file);
     consome(lookahead, ABRE_PARENTESE, file);
-    identificar_lista_expressao(lookahead, file);
+
+    identificar_expressao(lookahead, file);
+    printf("   IMPR\n");
+
+    while (lookahead->atomo == VIRGULA) {
+        consome(lookahead, VIRGULA, file);
+        identificar_expressao(lookahead, file);
+        printf("   IMPR\n");
+    }
+
     consome(lookahead, FECHA_PARENTESE, file);
 }
 
 void identificar_comando_entrada(TInfoAtomo* lookahead, FILE* file) {
+    TNo* no;
+    int linha;
+
     consome(lookahead, LEIA, file);
     consome(lookahead, ABRE_PARENTESE, file);
+
+    no = buscar_identificador(lookahead);
+    linha = lookahead->linha;
     consome(lookahead, IDENTIFICADOR, file);
+    verificar_leitura(no, linha);
+    printf("   LEIT\n");
+    if (no->referencia)
+        printf("   ARMI %d,%d\n", no->escopo, no->endereco);
+    else
+        printf("   ARMZ %d,%d\n", no->escopo, no->endereco);
 
     while (lookahead->atomo == VIRGULA) {
         consome(lookahead, VIRGULA, file);
+
+        no = buscar_identificador(lookahead);
+        linha = lookahead->linha;
         consome(lookahead, IDENTIFICADOR, file);
+        verificar_leitura(no, linha);
+        printf("   LEIT\n");
+        if (no->referencia)
+            printf("   ARMI %d,%d\n", no->escopo, no->endereco);
+        else
+            printf("   ARMZ %d,%d\n", no->escopo, no->endereco);
     }
 
     consome(lookahead, FECHA_PARENTESE, file);
@@ -175,14 +349,31 @@ void identificar_comando_atribuicao(TInfoAtomo* lookahead, FILE* file) {
 
 void identificar_comando(TInfoAtomo* lookahead, FILE* file) {
     switch (lookahead->atomo) {
-        case IDENTIFICADOR:
-        
+        case IDENTIFICADOR: {
+            TNo* no = buscar_identificador(lookahead);
+            int linha = lookahead->linha;
+
             consome(lookahead, IDENTIFICADOR, file);
-            if (lookahead->atomo == ATRIBUICAO)
+            if (lookahead->atomo == ATRIBUICAO) {
+                verificar_atribuicao(no, linha);
                 identificar_comando_atribuicao(lookahead, file);
-            else
-                identificar_chamada_procedimento(lookahead, file);
+
+                if (no->categoria == CAT_FUNCAO)
+                    printf("   ARMZ 1,%d\n", -(no->qtd_parametros + 3));
+                else if (no->referencia)
+                    printf("   ARMI %d,%d\n", no->escopo, no->endereco);
+                else
+                    printf("   ARMZ %d,%d\n", no->escopo, no->endereco);
+            }
+            else {
+                verificar_chamada_procedimento(no, linha);
+                verificar_argumentos(no, identificar_chamada_procedimento(lookahead, file, no), linha);
+                printf("   CHPR L%d\n", no->rotulo);
+                if (no->qtd_parametros > 0)
+                    printf("   DMEM %d\n", no->qtd_parametros);
+            }
             break;
+        }
         case LEIA:
             identificar_comando_entrada(lookahead, file);
             break;
@@ -216,10 +407,13 @@ void identificar_comando_composto(TInfoAtomo* lookahead, FILE* file) {
 }
 
 void identificar_parametro_formal(TInfoAtomo* lookahead, FILE* file) {
-    if (lookahead->atomo == VAR)
+    if (lookahead->atomo == VAR) {
         consome(lookahead, VAR, file);
+        definir_referencia(1);
+    }
 
-    identificar_lista_variaveis(lookahead, file);
+    identificar_lista_variaveis(lookahead, file, CAT_PARAMETRO);
+    definir_referencia(0);
 }
 
 void identificar_parametros_formais(TInfoAtomo* lookahead, FILE* file) {
@@ -234,6 +428,7 @@ void identificar_parametros_formais(TInfoAtomo* lookahead, FILE* file) {
         }
     }
 
+    calcular_enderecos_parametros();
     consome(lookahead, FECHA_PARENTESE, file);
 }
 
@@ -255,19 +450,43 @@ void identificar_tipo(TInfoAtomo* lookahead, FILE* file) {
 
 void identificar_declaracao_procedimento(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, PROCEDIMENTO, file);
+    TNo* rotina = declarar_identificador(lookahead, CAT_PROCEDIMENTO);
     consome(lookahead, IDENTIFICADOR, file);
+    rotina->rotulo = novo_rotulo();
+    printf("L%d:NADA\n", rotina->rotulo);
+    printf("   ENPR\n");
+    entrar_rotina(rotina);
     identificar_parametros_formais(lookahead, file);
     identificar_declaracao_variaveis(lookahead, file);
+    int m = total_variaveis();
+    if (m > 0)
+        printf("   AMEM %d\n", m);
     identificar_comando_composto(lookahead, file);
+    if (m > 0)
+        printf("   DMEM %d\n", m);
+    printf("   RTPR 0\n");
+    sair_rotina();
 }
 
 void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, FUNCAO, file);
     identificar_tipo(lookahead, file);
+    TNo* rotina = declarar_identificador(lookahead, CAT_FUNCAO);
     consome(lookahead, IDENTIFICADOR, file);
+    rotina->rotulo = novo_rotulo();
+    printf("L%d:NADA\n", rotina->rotulo);
+    printf("   ENPR\n");
+    entrar_rotina(rotina);
     identificar_parametros_formais(lookahead, file);
     identificar_declaracao_variaveis(lookahead, file);
+    int m = total_variaveis();
+    if (m > 0)
+        printf("   AMEM %d\n", m);
     identificar_comando_composto(lookahead, file);
+    if (m > 0)
+        printf("   DMEM %d\n", m);
+    printf("   RTPR 0\n");
+    sair_rotina();
 }
 
 void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file) {
@@ -279,10 +498,12 @@ void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file) {
     }
 }
 
-void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file) {
+void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file, TCategoria categoria) {
+    declarar_identificador(lookahead, categoria);
     consome(lookahead, IDENTIFICADOR, file);
     while (lookahead->atomo == VIRGULA) {
         consome(lookahead, VIRGULA, file);
+        declarar_identificador(lookahead, categoria);
         consome(lookahead, IDENTIFICADOR, file);
     }
     consome(lookahead, DOIS_PONTOS, file);
@@ -292,28 +513,49 @@ void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file) {
 void identificar_declaracao_variaveis(TInfoAtomo* lookahead, FILE* file) {
     if (lookahead->atomo == VAR) {
         consome(lookahead, VAR, file);
-        identificar_lista_variaveis(lookahead, file);
+        identificar_lista_variaveis(lookahead, file, CAT_VARIAVEL);
         consome(lookahead, PONTO_VIRGULA, file);
 
         while (lookahead->atomo == IDENTIFICADOR) {
-            identificar_lista_variaveis(lookahead, file);
+            identificar_lista_variaveis(lookahead, file, CAT_VARIAVEL);
             consome(lookahead, PONTO_VIRGULA, file);
         }
     }
 }
 
 void identificar_bloco(TInfoAtomo* lookahead, FILE* file) {
+    int n;
+    int principal;
+
     identificar_declaracao_variaveis(lookahead, file);
-    identificar_declaracao_rotinas(lookahead, file);
+
+    // As rotinas zeram o contador, entao o total e guardado agora
+    // Depois das variaveis, 2 posicoes temporarias para o mod
+    n = total_variaveis();
+    definir_base_temporaria(n);
+    printf("   AMEM %d\n", n + 2);
+
+    if (lookahead->atomo == FUNCAO || lookahead->atomo == PROCEDIMENTO) {
+        principal = novo_rotulo();
+        printf("   DSVS L%d\n", principal);
+        identificar_declaracao_rotinas(lookahead, file);
+        printf("L%d:NADA\n", principal);
+    }
+
     identificar_comando_composto(lookahead, file);
+
+    printf("   DMEM %d\n", n + 2);
 }
 
 void identificar_programa(TInfoAtomo* lookahead, FILE* file) {
     consome(lookahead, ALGORITMO, file);
     consome(lookahead, IDENTIFICADOR, file);
     consome(lookahead, PONTO_VIRGULA, file);
+
+    printf("   INPP\n");
     identificar_bloco(lookahead, file);
     consome(lookahead, PONTO, file);
+    printf("   PARA\n");
 
     if (lookahead->atomo != EOS)
         _erro_sintatico(lookahead, "fim do arquivo");

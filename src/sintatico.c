@@ -11,7 +11,16 @@
 #include "sintatico.h"
 #include "identificadores.h"
 #include "lexico.h"
+#include "semantico.h"
 #include "utils.h"
+
+static FILE* fonte = NULL;
+
+void encerrar_analise(int codigo) {
+    liberar_tabela(&tabela);
+    fclose(fonte);
+    exit(codigo);
+}
 
 void _erro_sintatico(TInfoAtomo* lookahead, const char* esperado_str) {
     printf(COR_VERMELHO);
@@ -27,15 +36,19 @@ void _erro_sintatico(TInfoAtomo* lookahead, const char* esperado_str) {
 
     print_atomo(lookahead);
     printf(COR_NORMAL);
-    exit(2);
+    encerrar_analise(2);
 }
 
 void _erro_lexico(TInfoAtomo* lookahead) {
     printf(COR_VERMELHO);
-    printf("Erro lexico em:\n    ");
-    print_atomo(lookahead);
+    printf(
+        "#%d: Erro lexico:\n"
+        "    Atomo invalido iniciado por '%c'\n",
+        lookahead->linha,
+        lookahead->atributo.ch
+    );
     printf(COR_NORMAL);
-    exit(1);
+    encerrar_analise(1);
 }
 
 void avancar(TInfoAtomo* lookahead, FILE* file) {
@@ -44,15 +57,11 @@ void avancar(TInfoAtomo* lookahead, FILE* file) {
 
         if (lookahead->atomo == ERRO)
             _erro_lexico(lookahead);
-
-        if (lookahead->atomo == COMENTARIO)
-            print_atomo(lookahead);
     } while (lookahead->atomo == COMENTARIO);
 }
 
 void consome(TInfoAtomo* lookahead, TAtomo esperado, FILE* file) {
     if (lookahead->atomo == esperado) {
-        print_atomo(lookahead);
         avancar(lookahead, file);
     }
 
@@ -68,8 +77,12 @@ void consome(TInfoAtomo* lookahead, TAtomo esperado, FILE* file) {
 void analizar(FILE* file) {
     TInfoAtomo lookahead;
 
+    fonte = file;
+
     avancar(&lookahead, file);
     identificar_programa(&lookahead, file);
 
-    printf("%d linhas analisadas, programa sintaticamente correto\n", lookahead.linha);
+    printf("\n");
+    imprimir_tabela(&tabela);
+    liberar_tabela(&tabela);
 }

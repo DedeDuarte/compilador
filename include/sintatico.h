@@ -13,6 +13,7 @@
 
 #include "atomos.h"
 
+void encerrar_analise(int codigo);
 void _erro_sintatico(TInfoAtomo* lookahead, const char* esperado_str);
 void _erro_lexico(TInfoAtomo* lookahead);
 void avancar(TInfoAtomo* lookahead, FILE* file);

@@ -15,6 +15,7 @@
 
 TInfoAtomo obter_atomo(FILE* file) {
     static int linha = 1;
+    static int linha_ultimo_atomo = 1;
 
     TInfoAtomo atomo = {0};
     atomo.atomo = ERRO;
@@ -34,6 +35,7 @@ TInfoAtomo obter_atomo(FILE* file) {
 
     if (c == EOF) {
         atomo.atomo = EOS;
+        atomo.linha = linha_ultimo_atomo;
         return atomo;
     }
 
@@ -78,5 +80,9 @@ TInfoAtomo obter_atomo(FILE* file) {
             break;
     }
 
+    if (atomo.atomo == ERRO)
+        atomo.atributo.ch = c;
+
+    linha_ultimo_atomo = linha;
     return atomo;
 }

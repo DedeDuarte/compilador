@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include "atomos.h"
+#include "tabela_simbolos.h"
 
 // <fator> ::= identificador [ '(' <lista_expressao> ')' ] | constint | constchar |
 //             '(' <expressao> ')' | ( '+' | '-' | nao ) <fator> | verdadeiro | falso
@@ -35,12 +36,14 @@ void identificar_operador_relacional(TInfoAtomo* lookahead, FILE* file);
 // <expressao> ::= <expressao_simples> [ <operador_relacional> <expressao_simples> ]
 void identificar_expressao(TInfoAtomo* lookahead, FILE* file);
 
+void identificar_argumento(TInfoAtomo* lookahead, FILE* file, TNo* rotina, int i);
+
 // <lista_expressao> ::= <expressao> { ',' <expressao> }
-void identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file);
+int identificar_lista_expressao(TInfoAtomo* lookahead, FILE* file, TNo* rotina);
 
 // <chamada_procedimento> ::= identificador [ '(' <lista_expressao> ')' ]
 // O identificador ja foi consumido em identificar_comando().
-void identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file);
+int identificar_chamada_procedimento(TInfoAtomo* lookahead, FILE* file, TNo* rotina);
 
 // <comando_repeticao> ::= enquanto <expressao> faca <comando>
 void identificar_comando_repeticao(TInfoAtomo* lookahead, FILE* file);
@@ -88,7 +91,7 @@ void identificar_declaracao_funcao(TInfoAtomo* lookahead, FILE* file);
 void identificar_declaracao_rotinas(TInfoAtomo* lookahead, FILE* file);
 
 // <lista_variaveis> ::= identificador { ',' identificador } ':' <tipo>
-void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file);
+void identificar_lista_variaveis(TInfoAtomo* lookahead, FILE* file, TCategoria categoria);
 
 // <declaracao_variaveis> ::= [ var <lista_variaveis> ';' { <lista_variaveis> ';' } ]
 void identificar_declaracao_variaveis(TInfoAtomo* lookahead, FILE* file);
