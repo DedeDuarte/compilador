@@ -23,7 +23,7 @@ TNo* buscar_simbolo(TTabelaSimbolos* tabela, char* id, int escopo) {
     TNo* no = tabela->entradas[hashMack(id)];
 
     while (no != NULL) {
-        if (strcmp(no->ID, id) == 0 && no->escopo == escopo)
+        if (no->ativo && strcmp(no->ID, id) == 0 && no->escopo == escopo)
             return no;
         no = no->prox;
     }
@@ -47,6 +47,8 @@ int inserir_simbolo(TTabelaSimbolos* tabela, char* id, TCategoria categoria, int
     novo->escopo = escopo;
     novo->endereco = endereco;
     novo->qtd_parametros = 0;
+    novo->rotulo = 0;
+    novo->ativo = 1;
 
     // Insere no inicio da lista da entrada
     int entrada = hashMack(id);
@@ -70,26 +72,31 @@ void liberar_tabela(TTabelaSimbolos* tabela) {
     }
 }
 
-void remover_locais(TTabelaSimbolos* tabela) {
+void desativar_locais(TTabelaSimbolos* tabela) {
     for (int i = 0; i < PRIME_NUMER; i++) {
-        TNo* anterior = NULL;
-        TNo* atual = tabela->entradas[i];
+        TNo* no = tabela->entradas[i];
 
-        while (atual != NULL) {
-            TNo* proximo = atual->prox;
+        while (no != NULL) {
+            if (no->escopo == ESC_LOCAL)
+                no->ativo = 0;
+            no = no->prox;
+        }
+    }
+}
 
-            if (atual->escopo == ESC_LOCAL) {
-                if (anterior == NULL)
-                    tabela->entradas[i] = proximo;
-                else
-                    anterior->prox = proximo;
-                free(atual);
-            }
-            else {
-                anterior = atual;
-            }
+void imprimir_tabela(TTabelaSimbolos* tabela) {
+    printf("Tabela de Simbolos\n");
+    printf("Entrada  ID               Endereco\n");
 
-            atual = proximo;
+    for (int i = 0; i < PRIME_NUMER; i++) {
+        TNo* no = tabela->entradas[i];
+
+        while (no != NULL) {
+            if (no->categoria == CAT_VARIAVEL || no->categoria == CAT_PARAMETRO)
+                printf("%7d  %-15s  %d\n", i, no->ID, no->endereco);
+            else
+                printf("%7d  %-15s  -\n", i, no->ID);
+            no = no->prox;
         }
     }
 }

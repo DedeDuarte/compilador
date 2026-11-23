@@ -27,6 +27,8 @@ typedef struct _TNo {
     TCategoria categoria;
     int escopo;
     int qtd_parametros;     // so para funcao e procedimento
+    int rotulo;
+    int ativo;
     struct _TNo *prox;
 } TNo;
 
@@ -42,6 +44,8 @@ TNo* buscar_simbolo(TTabelaSimbolos* tabela, char* id, int escopo);
 
 void liberar_tabela(TTabelaSimbolos* tabela);
 
-void remover_locais(TTabelaSimbolos* tabela);
+void desativar_locais(TTabelaSimbolos* tabela);
+
+void imprimir_tabela(TTabelaSimbolos* tabela);
 
 #endif
