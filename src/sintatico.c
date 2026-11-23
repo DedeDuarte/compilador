@@ -45,15 +45,11 @@ void avancar(TInfoAtomo* lookahead, FILE* file) {
 
         if (lookahead->atomo == ERRO)
             _erro_lexico(lookahead);
-
-        if (lookahead->atomo == COMENTARIO)
-            print_atomo(lookahead);
     } while (lookahead->atomo == COMENTARIO);
 }
 
 void consome(TInfoAtomo* lookahead, TAtomo esperado, FILE* file) {
     if (lookahead->atomo == esperado) {
-        print_atomo(lookahead);
         avancar(lookahead, file);
     }
 
@@ -71,7 +67,8 @@ void analizar(FILE* file) {
 
     avancar(&lookahead, file);
     identificar_programa(&lookahead, file);
-    liberar_tabela(&tabela);
 
-    printf("%d linhas analisadas, programa sintaticamente correto\n", lookahead.linha);
+    printf("\n");
+    imprimir_tabela(&tabela);
+    liberar_tabela(&tabela);
 }
