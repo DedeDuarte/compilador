@@ -80,7 +80,7 @@ void entrar_rotina(TNo* rotina) {
 void sair_rotina(void) {
     rotina_atual = NULL;
     escopo_atual = ESC_GLOBAL;
-    remover_locais(&tabela);
+    desativar_locais(&tabela);
 }
 
 TNo* buscar_identificador(TInfoAtomo* lookahead) {
@@ -132,4 +132,8 @@ void verificar_leitura(TNo* no, int linha) {
 void verificar_argumentos(TNo* no, int qtd, int linha) {
     if (qtd != no->qtd_parametros)
         _erro_semantico(linha, no->ID, "recebeu numero errado de argumentos");
+}
+
+int total_variaveis(void) {
+    return proximo_endereco;
 }

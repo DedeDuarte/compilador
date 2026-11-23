@@ -24,6 +24,8 @@ void calcular_enderecos_parametros(void);
 void entrar_rotina(TNo* rotina);
 void sair_rotina(void);
 
+int total_variaveis(void);
+
 TNo* buscar_identificador(TInfoAtomo* lookahead);
 
 void verificar_valor(TNo* no, int linha);
