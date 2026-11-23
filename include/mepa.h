@@ -11,4 +11,7 @@
 
 int novo_rotulo(void);
 
+void definir_base_temporaria(int endereco);
+int base_temporaria(void);
+
 #endif
