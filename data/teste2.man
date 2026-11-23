@@ -1,4 +1,5 @@
 Algoritmo ex2;
+Var maior: inteiro;
 Inicio
     ESCREVA(maior ;
 Fim.

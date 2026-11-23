@@ -1,12 +1,9 @@
-#1: algoritmo
-#1: identificador -> ex2
-#1: ponto_virgula
-#2: inicio
-#3: escreva
-#3: abre_par
-#3: identificador -> maior
-[38;2;255;0;0m#3: Erro sintatico:
+   INPP
+   AMEM 3
+   CRVL 0,0
+   IMPR
+[38;2;255;0;0m#4: Erro sintatico:
     Esperado [fecha_par]
     Recebido [ponto_virgula]
-    #3: ponto_virgula
+    #4: ponto_virgula
 [0m
